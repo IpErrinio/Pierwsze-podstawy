@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        #calculator {
+            width: 214px;
+            background-color: #999999;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        #display {
+            height: 60px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 20px;
+            font-size: 3em;
+        }
+        
+        button {
+            width: 50px;
+            height: 50px;
+            border: none;
+        }
+        
+        button.number {
+            background-color: #e0e0e0;
+            font-size: 1.5em;
+        }
+        
+        button.operator {
+            background-color: #ff9500;
+            color: white;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="calculator">
+        <div id="display">0</div>
+
+        <div style="display:flex;">
+            <div style="flex-grow :1 ;">
+                <button class="number" onclick="appendNumber('1')">1</button>
+                <button class="number" onclick="appendNumber('2')">2</button>
+                <button class="number" onclick="appendNumber('3')">3</button>
+                <button class="operator" onclick="chooseOperator('+')">+</button>
+
+                <button class="number" onclick="appendNumber('4')">4</button>
+                <button class="number" onclick="appendNumber('5')">5</button>
+                <button class="number" onclick="appendNumber('6')">6</button>
+                <button class="operator" onclick="chooseOperator('-')">-</button>
+
+                <button class="number" onclick="appendNumber('7')">7</button>
+                <button class="number" onclick="appendNumber('8')">8</button>
+                <button class="number" onclick="appendNumber('9')">9</button>
+                <button class="operator" onclick="chooseOperator('*')">x</button>
+
+                <button class="number" onclick="appendNumber('0')">0</button>
+
+                <button class="operator" onclick="deleteLast()">C</button>
+                <button class="operator" onclick="calculate()">=</button>
+                <button class="operator" onclick="chooseOperator('/')">÷</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        var display = document.getElementById('display');
+        var currentInput = '';
+        var operator = null;
+        var operand1 = null;
+
+
+        function appendNumber(number) {
+            currentInput += number;
+            display.innerText = currentInput;
+        }
+
+        function chooseOperator(op) {
+            if (currentInput !== '') {
+                operator = op;
+                operand1 = parseFloat(currentInput);
+                currentInput = '';
+            }
+        }
+
+        function deleteLast() {
+            if (currentInput !== '') {
+                currentInput = currentInput.slice(0, -1);
+                display.innerText = currentInput.toString();
+            }
+        }
+
+        function appendNumber(number) { //ogarnac limiter
+            if (currentInput.length < 7) {
+                currentInput += number;
+                display.innerText = currentInput;
+            }
+            if (currentInput.length > 7) {
+                display.style.fontSize = "3em";
+            } else {
+                display.style.fontSize = "1em";
+            }
+        } //ogarnac limiter
+
+        function calculate() {
+            if (operator !== null && operand1 !== null && currentInput !== '') {
+                var operand2 = parseFloat(currentInput);
+
+                switch (operator) {
+                    case '+':
+                        currentInput = operand1 + operand2;
+                        break;
+                    case '-':
+                        currentInput = operand1 - operand2;
+                        break;
+                    case '*':
+                        currentInput = operand1 * operand2;
+                        break;
+                    case '/':
+                        if (operand2 != 0) {
+                            currentInput = operand1 / operand2;
+                        } else {
+                            currentInput = 'Błąd! Dzielenie przez zero';
+                        }
+                        break;
+                    default:
+                        return 'Błąd! Nieznana operacja';
+                }
+
+                currentInput = currentInput.toString().substring(0, 6); //ogarnac limiter
+                display.innerText = currentInput;
+
+                operator = null;
+                operand1 = null;
+
+                if (currentInput.length > 6) { //ogarnac limiter
+                    display.style.fontSize = "3em";
+                } else {
+                    display.style.fontSize = "1em";
+                } //ogarnac limiter
+            }
+        }
+    </script>
+
+</body>
+
+</html>
